@@ -1,22 +1,8 @@
-import { useEffect, useState } from "react";
 import Header from "@/components/layout/Header";
 import PostCard from "@/components/common/PostCard";
 import { type PostProps } from "@/interfaces";
 
-export default function PostsPage() {
-  const [posts, setPosts] = useState<PostProps[]>([]);
-
-  // Fetch posts from JSONPlaceholder API
-  useEffect(() => {
-    const fetchPosts = async () => {
-      const res = await fetch("https://jsonplaceholder.typicode.com/posts");
-      const data = await res.json();
-      setPosts(data.slice(0, 10)); // limit to 10 posts
-    };
-
-    fetchPosts();
-  }, []);
-
+export default function PostsPage({ posts }: { posts: PostProps[] }) {
   return (
     <>
       <Header />
@@ -37,4 +23,16 @@ export default function PostsPage() {
       </main>
     </>
   );
+}
+
+// ⭐ Required getStaticProps
+export async function getStaticProps() {
+  const res = await fetch("https://jsonplaceholder.typicode.com/posts");
+  const data: PostProps[] = await res.json();
+
+  return {
+    props: {
+      posts: data.slice(0, 10), // limit to 10 posts
+    },
+  };
 }
