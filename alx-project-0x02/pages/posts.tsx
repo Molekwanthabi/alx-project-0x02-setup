@@ -1,37 +1,40 @@
-import React from "react";
+import { useEffect, useState } from "react";
+import Header from "@/components/layout/Header";
 import PostCard from "@/components/common/PostCard";
-import { PostProps } from "@/interfaces";
+import { type PostProps } from "@/interfaces";
 
-interface PostsPageProps {
-  posts: PostProps[];
-}
+export default function PostsPage() {
+  const [posts, setPosts] = useState<PostProps[]>([]);
 
-const Posts: React.FC<PostsPageProps> = ({ posts }) => {
+  // Fetch posts from JSONPlaceholder API
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const res = await fetch("https://jsonplaceholder.typicode.com/posts");
+      const data = await res.json();
+      setPosts(data.slice(0, 10)); // limit to 10 posts
+    };
+
+    fetchPosts();
+  }, []);
+
   return (
-    <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {posts.map((post) => (
-        <PostCard 
-          key={post.id} 
-          title={post.title} 
-          body={post.body} 
-          userId={post.userId} 
-          id={post.id}
-        />
-      ))}
-    </div>
+    <>
+      <Header />
+
+      <main className="p-6 space-y-6">
+        <h1 className="text-3xl font-bold text-center">Posts Page</h1>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {posts.map((post) => (
+            <PostCard
+              key={post.id}
+              title={post.title}
+              content={post.body}
+              userId={post.userId}
+            />
+          ))}
+        </div>
+      </main>
+    </>
   );
-};
-
-// Fetch posts from API
-export async function getStaticProps() {
-  const response = await fetch("https://jsonplaceholder.typicode.com/posts");
-  const posts = await response.json();
-
-  return {
-    props: {
-      posts,
-    },
-  };
 }
-
-export default Posts;
