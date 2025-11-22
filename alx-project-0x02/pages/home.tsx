@@ -1,8 +1,7 @@
-
 import { useState } from "react";
-import Header from "../components/layout/Header";
-import Card from "../components/common/Card";
-import PostModal from "../components/common/PostModal";
+import Header from "@/components/layout/Header";
+import Card from "@/components/common/Card";
+import PostModal from "@/components/common/PostModal";
 
 const HomePage = () => {
   // State to manage modal visibility
